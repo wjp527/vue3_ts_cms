@@ -116,6 +116,102 @@ npm i prettier -D
 
 
 
+### 4. git Husky和eslint
+
+虽然我们已经要求项目使用`eslint`了，但是不能保证组员提交代码之前都将eslint中的问题解决了
+
+- 也就是我们希望保证代码仓库中的代码都是符合`eslint`规范的
+- 那么我们需要在组员执行 `git commit` 命令的时候对其进行校验，如果不符合eslint规范，那么自动通过规范进行修复；
+
+那么如何做到这一点呢？可以通过 ==**Husky**==工具
+
+- `husky`是一个git hook工具: 可以帮助我们触发git提交的各个阶段: `pre-commit`、`commit-msg`、`pre-push`
+
+如何使用husky呢?
+
+这里我们通过自动配置命令: 
+
+```bash
+npx husky-init -and npm install
+```
+
+这里会做三件事: 
+
+1. 安装 `husky`相关的依赖
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\husky1.png)
+
+2. 在项目目录下创建 `.husky`文件夹
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\husky2.png)
+
+3. 在 `package.json` 添加一个脚本: 
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\husky3.png)
+
+4. 接下来，我们需要去完成一个操作，在进行commit时，执行lint脚本: 
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\husky4.png)
+
+
+
+这时候我们进行 `git commit` 的时候就会自动格式化代码进行lint校验了
+
+
+
+### 5. 代码提交风格
+
+通常我们的`git commit`会按照统一的风格来提交，这样可以快速定位每次提交的内容，方便之后对版本进行控制
+
+但是如果每次手动来编写这些是比较麻烦的，我们可以使用一个工具: `Commitizen`
+
+- `Commitizen` 是一个帮助我们编写规范 commit message 的工具: 
+
+1. 安装 `Commitizen`
+
+```bash
+npm install commitizen -D
+```
+
+
+
+2. 安装 `cz-conventional-changelog`, 并且初始化 `cz-conventional-changelog`:
+
+```bash
+npx commitizen init cz-conventional-changelog --save-dev --save-exact --save-dev --save-exact
+```
+
+
+
+这个命令会帮助我们安装`cz-conventional-changelog`
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\cz-conventional-changelog版本.png)
+
+
+
+并且在 package.json中进行配置: 
+
+![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\cz-conventional-changelog.png)
+
+
+
+这个时候我们提交代码需要使用 `npx cz` :
+
+- 第一步是选择 `type`, 本次更新的类型
+
+| Type     | 作用                                                         |
+| -------- | ------------------------------------------------------------ |
+| feat     | 新增特性(feature)                                            |
+| fix      | 修复Bug(bug fix)                                             |
+| docs     | 修改文档(documentation)                                      |
+| style    | 代码格式修改(white-space, formatting, missing semi colors, etc) |
+| refactor | 代码重构(refactor)                                           |
+| perf     | 改善性能(A code change that improves performance)            |
+| test     | 测试(when adding missing tests)                              |
+| ci       | 更改持续集成的配置文件和 package中的 scripts命令，例如: scopes； Travis, Circle等 |
+| chore    | 变更构建流程或辅助工具(比如更改环境)                         |
+| revent   | 代码回退                                                     |
+
 
 
 ## Project setup
