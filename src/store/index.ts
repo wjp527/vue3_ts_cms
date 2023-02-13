@@ -1,9 +1,17 @@
 import { createStore } from 'vuex'
 
-export default createStore({
-  state: {},
-  getters: {},
+const store = createStore({
+  // 数据
+  state: () => {
+    return {
+      name: 'coderwho'
+    }
+  },
+  // 同步
   mutations: {},
-  actions: {},
-  modules: {}
+  // 异步
+  getters: {},
+  actions: {}
 })
+
+export default store
