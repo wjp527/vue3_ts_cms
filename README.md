@@ -98,7 +98,15 @@ npm i prettier -D
   },
 ```
 
+==**可能会出现的问题:**== 
 
+✖ 2 problems (0 errors, 2 warnings) 0 errors and 2 warnings potentially fixable with the `--fix`
+
+解决方法: 
+
+```bash
+npm run lint --fix
+```
 
 
 
@@ -197,7 +205,7 @@ npx commitizen init cz-conventional-changelog --save-dev --save-exact --save-dev
 
 
 
-这个时候我们提交代码需要使用 `npx cz` :
+这个时候我们提交代码需要使用 **==`npx cz`==** :
 
 - 第一步是选择 `type`, 本次更新的类型
 
@@ -251,6 +259,57 @@ npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 如下图: 
 
 ![](D:\前端\Vue\Vue3\vue3-ts_cms\src\assets\md\commit-msg.png)
+
+4. **==配置脚本:==** 
+
+```json
+  "scripts": {
+    "commit": "cz"
+  },
+```
+
+5. **==执行命令:==** 
+
+```bash
+npm run commit
+```
+
+### 6. vue.config.js的配置
+
+```js
+const path = require('path')
+const { defineConfig } = require('@vue/cli-service')
+module.exports = defineConfig({
+  transpileDependencies: true,
+  // 1.配置方式一: CLI提供的属性
+  outputDir: './build',
+  // 2. 配置方式二: 和webpack属性完全一致，最后会机型合并
+  // configureWebpack: {
+  //   resolve: {
+  //     alias: {
+  //       components: '@/components'
+  //     }
+  //   }
+  // },
+  // configureWebpack: (config) => {
+  //   config.resolve.alias = {
+  //     '@': path.resolve(__dirname, 'src'),
+  //     components: '@/components'
+  //   }
+  // },
+  // 配置方式三:
+  chainWebpack: (config) => {
+    config.resolve.alias
+      .set('@', path.resolve(__dirname, 'src'))
+      .set('components', '@/components/')
+  }
+})
+
+```
+
+
+
+
 
 ## Project setup
 
