@@ -309,6 +309,14 @@ module.exports = defineConfig({
 
 
 
+### 7. env
+
+`.env.development`、`.env.production`、`.env.test` 中变量名不能随便起，如果要的话 需要这样:(在webpack中)
+
+```bash
+VUE_APP + 自定义名字
+```
+
 
 
 ## Project setup

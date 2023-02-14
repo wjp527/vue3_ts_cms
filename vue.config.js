@@ -5,6 +5,8 @@ module.exports = defineConfig({
   // 1.配置方式一: CLI提供的属性
   // 打包出口路径
   outputDir: './build',
+  // 修改加载资源的路径
+  // publicPath: './',
   // 2. 配置方式二: 和webpack属性完全一致，最后会机型合并
   // configureWebpack: {
   //   resolve: {
