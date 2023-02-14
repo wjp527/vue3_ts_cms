@@ -76,7 +76,7 @@ class PRequest {
     )
   }
 
-  request<T>(config: IPRequestConfig): Promise<T> {
+  request<T>(config: IPRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 1.单个请求对config的处理
       if (config.interceptors?.requestInterceptor) {
@@ -107,19 +107,19 @@ class PRequest {
     })
   }
 
-  get<T>(config: IPRequestConfig) {
+  get<T>(config: IPRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: IPRequestConfig) {
+  post<T>(config: IPRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'POST' })
   }
 
-  patch<T>(config: IPRequestConfig) {
+  patch<T>(config: IPRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'PATCH' })
   }
 
-  delete<T>(config: IPRequestConfig) {
+  delete<T>(config: IPRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
 }
