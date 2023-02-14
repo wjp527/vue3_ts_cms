@@ -1,8 +1,8 @@
 // service统一出口
 import PRequest from './request'
 
-console.log(process.env.VUE_APP_BASE_URL)
-console.log(process.env.VUE_APP_TIME_OUT)
+// console.log(process.env.VUE_APP_BASE_URL)
+// console.log(process.env.VUE_APP_TIME_OUT)
 const BASEURL = process.env.VUE_APP_BASE_URL
 const TIME_OUT = process.env.VUE_APP_TIME_OUT
 const pRequest = new PRequest({

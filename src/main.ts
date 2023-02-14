@@ -2,7 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
+// 初始化Css样式
+import 'normalize.css'
+import '@/assets/css/index.less'
 // 全局引入 elementplus组件库
 // import ElementPlus from 'element-plus'
 
@@ -22,6 +24,7 @@ app.use(router)
 app.use(store)
 // 全局引入 elementplus组件库
 // app.use(ElementPlus)
+
 // 局部引入
 // globalRegister(app)
 // 优雅的局部引入
@@ -31,7 +34,7 @@ app.use(globalRegister)
 // console.log(process.env.VUE_APP_BASE_URL)
 
 // pRequest.request({
-//   url: '/home',
+//   url: '/home/multidata',
 //   method: 'GET',
 //   interceptors: {
 //     requestInterceptor: (config) => {
@@ -45,15 +48,15 @@ app.use(globalRegister)
 //   }
 // })
 
-interface IDataType {
-  data: object
-  returnCode: string
-  success: boolean
-}
+// interface IDataType {
+//   data: object
+//   returnCode: string
+//   success: boolean
+// }
 
 // pRequest
 //   .request<IDataType>({
-//     url: '/home',
+//     url: '/home/multidata',
 //     method: 'GET',
 //     showLoading: false
 //   })
@@ -64,12 +67,12 @@ interface IDataType {
 //     console.log(res.success)
 //   })
 
-pRequest
-  .get<IDataType>({
-    url: '/home'
-    // showLoading: false
-  })
-  .then((res) => {
-    console.log(res)
-  })
+// pRequest
+//   .get<IDataType>({
+//     url: '/home/multidata'
+//     // showLoading: false
+//   })
+//   .then((res) => {
+//     console.log(res)
+//   })
 app.mount('#app')

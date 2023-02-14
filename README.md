@@ -319,6 +319,14 @@ VUE_APP + 自定义名字
 
 
 
+## 初始化Css样式
+
+```bash
+npm i normalize.css
+```
+
+
+
 ## Project setup
 
 ```
