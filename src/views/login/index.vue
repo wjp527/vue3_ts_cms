@@ -24,5 +24,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   background: url('../../assets/img/login-bg.svg');
+  // background: url('~@/assets/img/login-bg.svg');
 }
 </style>
