@@ -1,35 +1,11 @@
 <template>
   <div class="login-account">
-    <el-form
-      ref="ruleFormRef"
-      :model="account"
-      label-width="120px"
-      :rules="rules"
-    >
+    <el-form ref="formRef" :model="account" label-width="120px" :rules="rules">
       <el-form-item label="账号" prop="name" label-width="60">
         <el-input v-model="account.name" />
       </el-form-item>
       <el-form-item label="密码" prop="password" label-width="60">
-        <el-input v-model="account.password" />
-      </el-form-item>
-      <el-form-item label-width="60">
-        <div class="account-control">
-          <el-checkbox
-            v-model="isKeepPassword"
-            label="是否记住密码"
-            size="large"
-          />
-          <el-button key="primary" type="primary" link>忘记密码</el-button>
-        </div>
-      </el-form-item>
-      <el-form-item style="margin: 0">
-        <el-button
-          class="submit"
-          type="primary"
-          @click="onSubmit(ruleFormRef)"
-          style="widht: 100%"
-          >立即登录</el-button
-        >
+        <el-input v-model="account.password" show-password />
       </el-form-item>
     </el-form>
   </div>
@@ -38,46 +14,49 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { reactive, ref } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { ElForm, FormInstance, FormRules } from 'element-plus'
+import useLogin from '@/stores/login/login'
 
 import { rules } from '../config/account-config'
+
+// 缓存
+import localCache from '@/utils/cache'
 export default defineComponent({
   name: 'LoginAccount',
   setup(props, ctx) {
-    // 表单的Ref对象
-    const ruleFormRef = ref<FormInstance>()
     //  表单的数据
     const account = reactive({
-      name: '',
-      password: ''
+      name: localCache.getCache('userInfo')?.name ?? '',
+      password: localCache.getCache('userInfo')?.password ?? ''
     })
 
-    let isKeepPassword = ref(false)
+    const loginStore = useLogin()
+    const formRef = ref<InstanceType<typeof ElForm>>()
 
     // 提交表单
-    const onSubmit = async (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      await formEl.validate((valid, fields) => {
+    const loginAction = (isKeepPassword: boolean) => {
+      formRef.value?.validate((valid) => {
         if (valid) {
-          console.log('submit!')
-        } else {
-          console.log('error submit!', fields)
+          // 1.判断是否需要记住密码
+          if (isKeepPassword) {
+            // 本地缓存
+            localCache.setCache('userInfo', account)
+            loginStore.accountLoginAsync({
+              ...account
+            })
+          } else {
+            localCache.deleteCache('userInfo')
+          }
+          // 2.开始进行登录验证
         }
       })
     }
 
-    // 清空表单
-    const resetForm = (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      formEl.resetFields()
-    }
     return {
       account,
-      onSubmit,
+      loginAction,
       rules,
-      ruleFormRef,
-      resetForm,
-      isKeepPassword
+      formRef
     }
   }
 })

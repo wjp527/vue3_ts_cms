@@ -1,6 +1,11 @@
 // service统一出口
 import PRequest from './request'
 
+// 本地缓存
+// import useLogin from '@/stores/login/login'
+import localCache from '@/utils/cache'
+import { ElMessage } from 'element-plus'
+// 获取env中的常量
 // console.log(process.env.VUE_APP_BASE_URL)
 // console.log(process.env.VUE_APP_TIME_OUT)
 const BASEURL = process.env.VUE_APP_BASE_URL
@@ -12,23 +17,26 @@ const pRequest = new PRequest({
   interceptors: {
     requestInterceptor(config) {
       // 携带token拦截
-      const token = 'xxx'
+      const token = localCache.getCache('token')
+      console.log(token)
       if (token) {
+        // 添加请求头
         config.headers.Authorization = token
       }
-      console.log('请求成功的拦截')
+
       return config
     },
     requestInterceptorCatch(error) {
-      console.log('请求失败的拦截')
       return error
     },
     responseInterceptor(res) {
-      console.log('响应成功的拦截')
       return res
     },
     responseInterceptorCatch(err) {
-      console.log('响应失败的拦截')
+      ElMessage({
+        message: 'error',
+        type: 'error'
+      })
       return err
     }
   }

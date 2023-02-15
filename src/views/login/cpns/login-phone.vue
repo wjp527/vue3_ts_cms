@@ -12,12 +12,6 @@
       <el-form-item label="验证码" prop="code" label-width="80">
         <el-input v-model="account.code" />
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit(ruleFormRef)"
-          >Create</el-button
-        >
-        <el-button @click="resetForm(ruleFormRef)">Cancel</el-button>
-      </el-form-item>
     </el-form>
   </div>
 </template>

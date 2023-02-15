@@ -1,7 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+// 引入路由
 import router from './router'
-import store from './store'
+// 引入pinia
+import pinia from './stores'
 // 初始化Css样式
 import 'normalize.css'
 import '@/assets/css/index.less'
@@ -11,7 +13,6 @@ import '@/assets/css/index.less'
 // elementplus组件库 样式
 import 'element-plus/dist/index.css'
 
-// import '@/service/axios_demo'
 // 按需加载组件
 import { globalRegister } from '@/global/index'
 
@@ -21,7 +22,7 @@ const app = createApp(App)
 // 挂载路由
 app.use(router)
 // 挂载vuex状态管理
-app.use(store)
+app.use(pinia)
 // 全局引入 elementplus组件库
 // app.use(ElementPlus)
 

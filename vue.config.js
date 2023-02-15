@@ -7,14 +7,26 @@ module.exports = defineConfig({
   outputDir: './build',
   // 修改加载资源的路径
   // publicPath: './',
-  // 2. 配置方式二: 和webpack属性完全一致，最后会机型合并
-  // configureWebpack: {
-  //   resolve: {
-  //     alias: {
-  //       components: '@/components'
+  // 跨域处理
+  // devServer: {
+  //   proxy: {
+  //     '^/api': {
+  //       target: 'http://152.136.185.210:5000',
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       },
+  //       changeOrigin: true
   //     }
   //   }
   // },
+  // 2. 配置方式二: 和webpack属性完全一致，最后会机型合并
+  configureWebpack: {
+    resolve: {
+      alias: {
+        components: '@/components'
+      }
+    }
+  }
   // configureWebpack: (config) => {
   //   config.resolve.alias = {
   //     '@': path.resolve(__dirname, 'src'),
@@ -22,9 +34,9 @@ module.exports = defineConfig({
   //   }
   // },
   // 配置方式三:
-  chainWebpack: (config) => {
-    config.resolve.alias
-      .set('@', path.resolve(__dirname, 'src'))
-      .set('components', '@/components/')
-  }
+  // chainWebpack: (config) => {
+  //   config.resolve.alias
+  //     .set('@', path.resolve(__dirname, 'src'))
+  //     .set('components', '@/components/')
+  // }
 })
