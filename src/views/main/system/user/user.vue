@@ -1,6 +1,7 @@
 <template>
   <div class="user">
-    <PForm v-bind="formConfig" />
+    <!-- <PForm v-bind="formConfig" :formData="formData" /> -->
+    <PForm v-bind="formConfig" v-model="formData" />
   </div>
 </template>
 
@@ -13,7 +14,14 @@ import { formConfig } from './config/search.config'
 export default defineComponent({
   name: 'UserVue',
   setup() {
-    return { formConfig }
+    const formData = ref({
+      id: '',
+      name: '',
+      password: '',
+      sport: '',
+      createTime: ''
+    })
+    return { formConfig, formData }
   },
   components: {
     PForm

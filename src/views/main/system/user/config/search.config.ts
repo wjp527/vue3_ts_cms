@@ -3,24 +3,28 @@ export const formConfig: IForm = {
   // 数据集
   formItems: [
     {
+      field: 'id',
       type: 'input',
       label: 'ID',
       rules: [],
       placeholder: '请输入用户ID'
     },
     {
+      field: 'name',
       type: 'input',
       label: '用户名',
       rules: [],
       placeholder: '请输入用户名'
     },
     {
+      field: 'password',
       type: 'password',
       label: '密码',
       rules: [],
       placeholder: '请输入密码'
     },
     {
+      field: 'sport',
       type: 'select',
       label: '喜欢的运动',
       rules: [],
@@ -37,6 +41,7 @@ export const formConfig: IForm = {
       ]
     },
     {
+      field: 'createTime',
       type: 'datepicker',
       label: '创建时间',
       rules: [],

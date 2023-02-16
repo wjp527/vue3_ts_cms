@@ -1,8 +1,9 @@
-// 显示框子的类型
+// 显示框子的类型(联合类型)
 type IFormType = 'input' | 'password' | 'select' | 'datepicker'
 
 // 框子的配置项
 export interface IFormItem {
+  field: string
   type: IFormType
   label: string
   rules?: any[]

@@ -16,6 +16,7 @@
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
                   v-bind="item.otherOptions"
+                  v-model="formData[`${item.field}`]"
                 />
               </template>
 
@@ -27,6 +28,7 @@
                     v-for="i in item.options"
                     :key="i.id"
                     v-bind="item.otherOptions"
+                    v-model="formData[`${item.field}`]"
                   />
                 </el-select>
               </template>
@@ -35,6 +37,7 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100px"
+                  v-model="formData[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -46,11 +49,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import { IFormItem } from '../types/index'
 export default defineComponent({
   name: 'FromVue',
   props: {
+    // PForm  组件传来的formData数据
+    modelValue: {
+      type: Object,
+      required: true
+    },
     formItems: {
       // 类型断言,要求formItems IFormItem 类型的
       type: Array as PropType<IFormItem[]>,
@@ -79,10 +87,20 @@ export default defineComponent({
       })
     }
   },
-  setup(props, ctx) {
-    // console.log(props.formItems)
-    // const formItems = props.formItems
-    // return { formItems }
+  setup(props, { emit }) {
+    const formData: any = ref({ ...props.modelValue })
+
+    watch(
+      formData,
+      (newValue) => {
+        console.log(newValue)
+        emit('update:modelValue', newValue)
+      },
+      {
+        deep: true
+      }
+    )
+    return { formData }
   }
 })
 </script>
