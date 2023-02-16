@@ -27,16 +27,16 @@ const useLogin = defineStore('login', {
     // 计算动态路由数据
     getsMenus() {
       this.userMenus = localCache.getCache('menus')
-      if (this.userMenus) {
-        // console.log(this.userMenus)
-        const routes = mapMenusToRoutes(this.userMenus)
-        console.log(routes)
-        // 将routes -> router.main.children
-        // 注册路由
-        routes.forEach((route) => {
-          router.addRoute('main', route)
-        })
-      }
+      // if (this.userMenus) {
+      // console.log(this.userMenus)
+      const routes = mapMenusToRoutes(this.userMenus)
+      console.log(routes)
+      // 将routes -> router.main.children
+      // 注册路由
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
+      // }
     }
   },
 
@@ -71,7 +71,13 @@ const useLogin = defineStore('login', {
       this.userMenus = menu.data
       localCache.setCache('menus', this.userMenus)
       // 获取用户的动态路由
-      this.getsMenus
+      const routes = mapMenusToRoutes(this.userMenus)
+      console.log(routes)
+      // 将routes -> router.main.children
+      // 注册路由
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     },
     loadLocalLogin() {
       const token = localCache.getCache('token')
@@ -82,11 +88,18 @@ const useLogin = defineStore('login', {
       if (userInfo) {
         this.userInfo = userInfo
       }
-      const userMenus = localCache.getCache('menu')
+      // const userMenus = localCache.getCache('menu')
+      const userMenus = JSON.parse(JSON.stringify(this.userMenus))
       if (userMenus) {
         // userMenus -> routes
         // 获取用户的动态路由
-        this.getsMenus
+        const routes = mapMenusToRoutes(this.userMenus)
+        console.log(routes)
+        // 将routes -> router.main.children
+        // 注册路由
+        routes.forEach((route) => {
+          router.addRoute('main', route)
+        })
       }
     }
   },
