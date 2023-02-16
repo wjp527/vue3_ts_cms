@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import router from '@/router'
 
 import localCache from '@/utils/cache'
-// 用户模块
+// 用户模块接口
 import {
   accountLoginRequest,
   requestUserInfoById,
@@ -94,7 +94,7 @@ const useLogin = defineStore('login', {
         // userMenus -> routes
         // 获取用户的动态路由
         const routes = mapMenusToRoutes(this.userMenus)
-        console.log(routes)
+        // console.log(routes)
         // 将routes -> router.main.children
         // 注册路由
         routes.forEach((route) => {

@@ -327,6 +327,221 @@ npm i normalize.css
 
 
 
+## 添加动态路由
+
+```tsx
+import { defineStore } from 'pinia'
+// 路由
+import router from '@/router'
+
+import localCache from '@/utils/cache'
+// 用户模块接口
+import {
+  accountLoginRequest,
+  requestUserInfoById,
+  reqUserMenuByRoleId
+} from '@/api/user/login'
+
+// 用户类型的接口
+import { IAccount, IDataType } from '@/api/user/types'
+// 登录类型的接口
+import { ILoginState } from './types'
+import { ElMessage } from 'element-plus'
+import { mapMenusToRoutes } from '@/utils/map.menus'
+const useLogin = defineStore('login', {
+  state: (): ILoginState => ({
+    token: '',
+    userInfo: {},
+    userMenus: {}
+  }),
+
+  getters: {
+    // 计算动态路由数据
+    getsMenus() {
+      this.userMenus = localCache.getCache('menus')
+      // if (this.userMenus) {
+      // console.log(this.userMenus)
+      const routes = mapMenusToRoutes(this.userMenus)
+      console.log(routes)
+      // 将routes -> router.main.children
+      // 注册路由
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
+      // }
+    }
+  },
+
+  actions: {
+    // 用户登录
+    async accountLoginAsync(payload: IAccount) {
+      const res = await accountLoginRequest(payload)
+      const { id, token } = res.data
+
+      localCache.setCache('token', token)
+      if (token) {
+        this.token = token
+        this.getUserInfo(id)
+
+        ElMessage({
+          message: '登录成功',
+          type: 'success'
+        })
+        // 跳转到首页
+        router.push('/main')
+      }
+    },
+    async getUserInfo(id: number) {
+      // 获取某个用户信息
+      const users = await requestUserInfoById(id)
+      this.userInfo = users.data
+      this.getMenu(id)
+    },
+    async getMenu(id: number) {
+      // 获取侧边栏全部数据
+      const menu = await reqUserMenuByRoleId(id)
+      this.userMenus = menu.data
+      localCache.setCache('menus', this.userMenus)
+      // 获取用户的动态路由
+      const routes = mapMenusToRoutes(this.userMenus)
+      console.log(routes)
+      // 将routes -> router.main.children
+      // 注册路由
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
+    },
+    loadLocalLogin() {
+      const token = localCache.getCache('token')
+      if (token) {
+        this.token = token
+      }
+      const userInfo = localCache.getCache('userInfo')
+      if (userInfo) {
+        this.userInfo = userInfo
+      }
+      // const userMenus = localCache.getCache('menu')
+      const userMenus = JSON.parse(JSON.stringify(this.userMenus))
+      if (userMenus) {
+        // userMenus -> routes
+        // 获取用户的动态路由
+        const routes = mapMenusToRoutes(this.userMenus)
+        // console.log(routes)
+        // 将routes -> router.main.children
+        // 注册路由
+        routes.forEach((route) => {
+          router.addRoute('main', route)
+        })
+      }
+    }
+  },
+
+  // 开启数据缓存
+  persist: {
+    enabled: true
+  }
+})
+
+export default useLogin
+
+```
+
+
+
+整合路由 `map.menus.ts`
+
+```js
+import { RouteRecordRaw } from 'vue-router'
+
+export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
+  const routes: RouteRecordRaw[] = []
+  // 1.先去加载默认所有的routes
+  const allRoutes: RouteRecordRaw[] = []
+  // 要递归的文件路径， 是否要进行递归，递归以.ts结尾的文件
+  const routeFiles = require.context('../router/main', true, /\.ts/)
+
+  routeFiles.keys().forEach((key) => {
+    // 切割成这样子的
+    // /story/chat/chat
+    const keyItem = key.split('.')[1]
+    // 加载某一个具体的文件
+    const route = require('../router/main' + keyItem)
+    allRoutes.push(route.default)
+  })
+
+  // 2.根据菜单获取需要添加的routes
+  // 递归函数
+  const _recurseGetRoute = (menus: any[]) => {
+    for (const menu of menus) {
+      // 要做映射的菜单
+      if (menu.type === 2) {
+        const route = allRoutes.find((item) => item.path === menu.url)
+        if (route) {
+          routes.push(route)
+        }
+      } else {
+        _recurseGetRoute(menu.children)
+      }
+    }
+  }
+
+  _recurseGetRoute(userMenus)
+
+  return routes
+}
+```
+
+生成路由页面
+
+```bash
+npm install coderwhy -g
+
+// 生成文件 路由文件，view页面
+coderwhy add3page overview -d src/views/main/analysis/overview
+```
+
+
+
+路由导航守卫
+
+```js
+// 导航守卫
+router.beforeEach((to) => {
+  const token = localCache.getCache('token')
+  if (to.path !== '/login') {
+    if (!token) {
+      return '/login'
+    }
+  }
+
+  // console.log(router.getRoutes())
+  // console.log(to)
+})
+
+```
+
+
+
+`main.ts`
+
+```js
+const app = createApp(App)
+// 优雅的局部引入
+app.use(globalRegister)
+// 挂载vuex状态管理
+// pinia挂载要在router之前
+app.use(pinia)
+const loginStore = useLogin()
+// 重新加载动态路由
+loginStore.loadLocalLogin()
+
+// 挂载路由
+app.use(router)
+app.mount('#app')
+```
+
+
+
 ## Project setup
 
 ```
