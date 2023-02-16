@@ -6,13 +6,18 @@
     <el-icon class="fold-menu" v-else @click="handleFoldClick"
       ><Fold
     /></el-icon>
-    <p>header</p>
+    <div class="content">
+      <div>面包屑</div>
+      <NavUserInfo />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { Expand, Fold } from '@element-plus/icons-vue'
+import { CircleCloseFilled } from '@element-plus/icons-vue'
+import NavUserInfo from './nav-userInfo.vue'
 export default defineComponent({
   name: 'NavHeader',
   emit: ['foldChange'],
@@ -25,10 +30,11 @@ export default defineComponent({
     }
     return {
       isFold,
-      handleFoldClick
+      handleFoldClick,
+      CircleCloseFilled
     }
   },
-  components: { Expand, Fold }
+  components: { Expand, Fold, NavUserInfo }
 })
 </script>
 
@@ -40,6 +46,13 @@ export default defineComponent({
   .fold-menu {
     font-size: 24px;
     cursor: pointer;
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
   }
 }
 </style>

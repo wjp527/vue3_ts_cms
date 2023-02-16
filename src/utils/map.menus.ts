@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
-
+let firstMenu: any = null
+// 计算动态路由
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
   // 1.先去加载默认所有的routes
@@ -13,6 +14,7 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
     const keyItem = key.split('.')[1]
     // 加载某一个具体的文件
     const route = require('../router/main' + keyItem)
+
     allRoutes.push(route.default)
   })
 
@@ -26,6 +28,10 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
         if (route) {
           routes.push(route)
         }
+        // 获取第一个二级的id
+        if (!firstMenu) {
+          firstMenu = menu
+        }
       } else {
         _recurseGetRoute(menu.children)
       }
@@ -37,38 +43,19 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   return routes
 }
 
-// let firstMenu: any = null
+// 根据导航栏上的路由路径,进行获取左侧侧边栏的默认展示字段
+export function pathMapMenu(Menu: any[], currentPath: string): any {
+  for (const item of Menu) {
+    // 继续向下遍历
+    if (item.type === 1) {
+      const findMenu = pathMapMenu(item.children ?? [], currentPath)
+      if (findMenu) {
+        return findMenu
+      }
+    } else if (item.type === 2 && item.url === currentPath) {
+      return item
+    }
+  }
+}
 
-// export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
-//   const routes: RouteRecordRaw[] = []
-
-//   // 1.先去加载默认所有的routes
-//   const allRoutes: RouteRecordRaw[] = []
-//   const routeFiles = require.context('../router/main', true, /\.ts/)
-//   routeFiles.keys().forEach((key) => {
-//     const route = require('../router/main' + key.split('.')[1])
-//     allRoutes.push(route.default)
-//   })
-
-//   // 2.根据菜单获取需要添加的routes
-//   // userMenus:
-//   // type === 1 -> children -> type === 1
-//   // type === 2 -> url -> route
-//   const _recurseGetRoute = (menus: any[]) => {
-//     for (const menu of menus) {
-//       if (menu.type === 2) {
-//         const route = allRoutes.find((route) => route.path === menu.url)
-//         if (route) routes.push(route)
-//         if (!firstMenu) {
-//           firstMenu = menu
-//         }
-//       } else {
-//         _recurseGetRoute(menu.children)
-//       }
-//     }
-//   }
-
-//   _recurseGetRoute(userMenus)
-
-//   return routes
-// }
+export { firstMenu }

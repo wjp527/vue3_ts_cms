@@ -1,16 +1,22 @@
 <template>
   <div class="user">
-    <h2>user</h2>
+    <PForm v-bind="formConfig" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-
+import { defineComponent, ref } from 'vue'
+// 表单组件
+import PForm from '@/base-ui/from/index'
+// 表单的配置项
+import { formConfig } from './config/search.config'
 export default defineComponent({
   name: 'UserVue',
   setup() {
-    return {}
+    return { formConfig }
+  },
+  components: {
+    PForm
   }
 })
 </script>

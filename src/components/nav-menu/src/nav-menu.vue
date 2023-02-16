@@ -7,6 +7,7 @@
 
     <el-menu
       class="el-menu-vertical-demo"
+      :default-active="defaultValue"
       background-color="#0c2135"
       text-color="#b7bdc3"
       active-text-color="#0a60bd"
@@ -48,10 +49,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { Setting } from '@element-plus/icons-vue'
 import useLogin from '@/stores/login/login'
+import { pathMapMenu } from '@/utils/map.menus'
 export default defineComponent({
   name: 'NavMenu',
   props: {
@@ -60,10 +62,22 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    // pinia
     const loginStore = useLogin()
     const menu = loginStore.userMenus
-    const router = useRouter()
 
+    // router
+    const router = useRouter()
+    const Route = useRoute()
+    // console.log(Route)
+    const routePath = Route.path
+    let current = pathMapMenu(menu, routePath)
+
+    let defaultValue = ref(current.id + '')
+
+    console.log(defaultValue)
+
+    // 方法
     const handleMenuItemClick = (item: any) => {
       router.push({
         path: item.url ?? '/notFound'
@@ -71,10 +85,13 @@ export default defineComponent({
     }
     return {
       menu,
-      handleMenuItemClick
+      handleMenuItemClick,
+      defaultValue
     }
   },
-  components: { Setting }
+  components: {
+    Setting
+  }
 })
 </script>
 

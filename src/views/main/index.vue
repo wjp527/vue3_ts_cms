@@ -8,8 +8,10 @@
         <el-header>
           <NavHeader @foldChange="foldChange" />
         </el-header>
-        <el-main>
-          <router-view></router-view>
+        <el-main class="page-container">
+          <div class="page">
+            <router-view></router-view>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -40,6 +42,16 @@ export default defineComponent({
   height: 100%;
   .el-container {
     height: 100%;
+  }
+}
+.page-container {
+  margin: 10px;
+  background-color: #eef0f4;
+  .page {
+    background-color: #fff;
+    // height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
   }
 }
 
