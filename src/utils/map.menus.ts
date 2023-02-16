@@ -1,3 +1,4 @@
+import { IBreadCrumb } from '@/base-ui/breadcrumb'
 import { RouteRecordRaw } from 'vue-router'
 let firstMenu: any = null
 // 计算动态路由
@@ -43,13 +44,27 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   return routes
 }
 
+// 获取面包屑数据
+export function pathMapBreadcrumbs(userMenus: any[], currentPath: string) {
+  const breadcrumb: IBreadCrumb[] = []
+  pathMapMenu(userMenus, currentPath, breadcrumb)
+  return breadcrumb
+}
+
 // 根据导航栏上的路由路径,进行获取左侧侧边栏的默认展示字段
-export function pathMapMenu(Menu: any[], currentPath: string): any {
+export function pathMapMenu(
+  Menu: any[],
+  currentPath: string,
+  breadcrumb?: IBreadCrumb[]
+): any {
   for (const item of Menu) {
     // 继续向下遍历
     if (item.type === 1) {
       const findMenu = pathMapMenu(item.children ?? [], currentPath)
       if (findMenu) {
+        breadcrumb?.push({ name: item.name })
+        breadcrumb?.push({ name: findMenu.name })
+
         return findMenu
       }
     } else if (item.type === 2 && item.url === currentPath) {

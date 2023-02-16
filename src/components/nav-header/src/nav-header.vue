@@ -7,17 +7,24 @@
       ><Fold
     /></el-icon>
     <div class="content">
-      <div>面包屑</div>
+      <PBreadCrumb :breadcrumbs="breadcrumbs" />
       <NavUserInfo />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { Expand, Fold } from '@element-plus/icons-vue'
 import { CircleCloseFilled } from '@element-plus/icons-vue'
+// 用户信息
 import NavUserInfo from './nav-userInfo.vue'
+// 面包屑组件,面包屑类型
+import PBreadCrumb, { IBreadCrumb } from '@/base-ui/breadcrumb/index'
+// 面包屑数据
+import { pathMapBreadcrumbs } from '@/utils/map.menus'
+import useLogin from '@/stores/login/login'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'NavHeader',
   emit: ['foldChange'],
@@ -28,13 +35,26 @@ export default defineComponent({
       // 子传父
       emit('foldChange', isFold.value)
     }
+
+    // 路径变化,或者左侧侧边栏数据变化,就会重新渲染页面
+    const breadcrumbs = computed(() => {
+      // 获取左侧参数数据
+      const { userMenus } = useLogin()
+
+      // 获取当前的路径
+      const Router = useRouter()
+      const path = Router.currentRoute.value.path
+      return pathMapBreadcrumbs(userMenus, path)
+    })
+
     return {
       isFold,
       handleFoldClick,
-      CircleCloseFilled
+      CircleCloseFilled,
+      breadcrumbs
     }
   },
-  components: { Expand, Fold, NavUserInfo }
+  components: { Expand, Fold, NavUserInfo, PBreadCrumb }
 })
 </script>
 

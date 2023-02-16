@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Setting } from '@element-plus/icons-vue'
 import useLogin from '@/stores/login/login'
@@ -72,10 +72,7 @@ export default defineComponent({
     // console.log(Route)
     const routePath = Route.path
     let current = pathMapMenu(menu, routePath)
-
     let defaultValue = ref(current.id + '')
-
-    console.log(defaultValue)
 
     // 方法
     const handleMenuItemClick = (item: any) => {
