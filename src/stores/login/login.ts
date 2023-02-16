@@ -26,13 +26,17 @@ const useLogin = defineStore('login', {
   getters: {
     // 计算动态路由数据
     getsMenus() {
-      const routes = mapMenusToRoutes(this.userMenus)
-      console.log(routes)
-      // 将routes -> router.main.children
-      // 注册路由
-      routes.forEach((route) => {
-        router.addRoute('main', route)
-      })
+      this.userMenus = localCache.getCache('menus')
+      if (this.userMenus) {
+        // console.log(this.userMenus)
+        const routes = mapMenusToRoutes(this.userMenus)
+        console.log(routes)
+        // 将routes -> router.main.children
+        // 注册路由
+        routes.forEach((route) => {
+          router.addRoute('main', route)
+        })
+      }
     }
   },
 
@@ -65,7 +69,7 @@ const useLogin = defineStore('login', {
       // 获取侧边栏全部数据
       const menu = await reqUserMenuByRoleId(id)
       this.userMenus = menu.data
-      // userMenus -> routes
+      localCache.setCache('menus', this.userMenus)
       // 获取用户的动态路由
       this.getsMenus
     },
@@ -78,7 +82,7 @@ const useLogin = defineStore('login', {
       if (userInfo) {
         this.userInfo = userInfo
       }
-      const userMenus = JSON.parse(JSON.stringify(this.userMenus))
+      const userMenus = localCache.getCache('menu')
       if (userMenus) {
         // userMenus -> routes
         // 获取用户的动态路由
