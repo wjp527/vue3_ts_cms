@@ -18,7 +18,7 @@ const pRequest = new PRequest({
     requestInterceptor(config) {
       // 携带token拦截
       const token = localCache.getCache('token')
-      console.log(token)
+
       if (token) {
         // 添加请求头
         config.headers.Authorization = token

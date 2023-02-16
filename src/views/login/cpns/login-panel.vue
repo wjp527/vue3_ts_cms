@@ -55,7 +55,7 @@ export default defineComponent({
       if (currentTab.value === 'account') {
         accountRef.value?.loginAction(isKeepPassword.value)
       } else {
-        console.log('phoneRef调用loginAction')
+        // console.log('phoneRef调用loginAction')
       }
     }
 

@@ -15,21 +15,24 @@ import 'element-plus/dist/index.css'
 
 // 按需加载组件
 import { globalRegister } from '@/global/index'
+import useLogin from './stores/login/login'
 
-// 引入请求
-import pRequest from '@/service'
 const app = createApp(App)
-// 挂载路由
-app.use(router)
+// 优雅的局部引入
+app.use(globalRegister)
 // 挂载vuex状态管理
 app.use(pinia)
+const loginStore = useLogin()
+loginStore.loadLocalLogin()
+
+// 挂载路由
+app.use(router)
+
 // 全局引入 elementplus组件库
 // app.use(ElementPlus)
 
 // 局部引入
 // globalRegister(app)
-// 优雅的局部引入
-app.use(globalRegister)
 
 // 获取环境变量
 // console.log(process.env.VUE_APP_BASE_URL)
