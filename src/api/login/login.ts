@@ -1,5 +1,6 @@
 import pRequest from '@/service'
-import { IAccount, IDataType } from './types'
+import { IAccount } from './types'
+import { IDataType } from '@/api/types'
 
 enum LoginAPI {
   // 登录

@@ -1,20 +1,22 @@
 import { defineStore } from 'pinia'
 // 路由
 import router from '@/router'
-
+// 本地缓存
 import localCache from '@/utils/cache'
 // 用户模块接口
 import {
   accountLoginRequest,
   requestUserInfoById,
   reqUserMenuByRoleId
-} from '@/api/user/login'
+} from '@/api/login/login'
 
 // 用户类型的接口
-import { IAccount, IDataType } from '@/api/user/types'
+import { IAccount } from '@/api/login/types'
 // 登录类型的接口
 import { ILoginState } from './types'
+// 消息组件
 import { ElMessage } from 'element-plus'
+// 生成动态路由
 import { mapMenusToRoutes } from '@/utils/map.menus'
 const useLogin = defineStore('login', {
   state: (): ILoginState => ({
@@ -60,6 +62,7 @@ const useLogin = defineStore('login', {
       // 获取用户的动态路由
       this.getsMenus(menu.data)
     },
+    // 刷新页面都会执行这个方法
     loadLocalLogin() {
       const token = localCache.getCache('token')
       if (token) {
@@ -73,10 +76,10 @@ const useLogin = defineStore('login', {
       // const userMenus = JSON.parse(JSON.stringify(this.userMenus))
       const userMenus = localCache.getCache('menus')
       this.getsMenus(userMenus)
-      const routes = mapMenusToRoutes(userMenus)
-      routes.forEach((route) => {
-        router.addRoute('main', route)
-      })
+      // const routes = mapMenusToRoutes(userMenus)
+      // routes.forEach((route) => {
+      //   router.addRoute('main', route)
+      // })
     },
     // 计算动态路由数据
     getsMenus(menus: any) {

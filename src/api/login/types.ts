@@ -4,7 +4,7 @@ export interface IAccount {
   password: string
 }
 
-export interface IDataType {
-  code: number
-  data: any
-}
+// export interface IDataType {
+//   code: number
+//   data: any
+// }

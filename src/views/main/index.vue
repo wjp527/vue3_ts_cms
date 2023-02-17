@@ -50,7 +50,7 @@ export default defineComponent({
   .page {
     background-color: #fff;
     // height: 100%;
-    padding: 10px;
+    // padding: 10px;
     box-sizing: border-box;
   }
 }

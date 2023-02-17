@@ -19,6 +19,17 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
     allRoutes.push(route.default)
   })
 
+  // vite 代替 webopack中的require context API
+  /*
+    const utilFuns: any = {};
+    const files = import.meta.globEager('./*.ts');
+    Object.keys(files).forEach((fileName) => {
+      const name = fileName.replace(/\.\/|\.ts/g, '');
+      utilFuns[name] = files[fileName].default;
+    });
+    export default utilFuns;
+ */
+
   // 2.根据菜单获取需要添加的routes
   // 递归函数
   const _recurseGetRoute = (menus: any[]) => {
