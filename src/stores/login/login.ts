@@ -74,8 +74,13 @@ const useLogin = defineStore('login', {
       }
       // const userMenus = localCache.getCache('menu')
       // const userMenus = JSON.parse(JSON.stringify(this.userMenus))
-      const userMenus = localCache.getCache('menus')
-      this.getsMenus(userMenus)
+      if (localCache.getCache('menus')) {
+        const userMenus = localCache.getCache('menus')
+        this.getsMenus(userMenus)
+      } else {
+        router.push('/login')
+      }
+
       // const routes = mapMenusToRoutes(userMenus)
       // routes.forEach((route) => {
       //   router.addRoute('main', route)

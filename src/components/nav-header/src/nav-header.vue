@@ -20,7 +20,7 @@ import { CircleCloseFilled } from '@element-plus/icons-vue'
 // 用户信息
 import NavUserInfo from './nav-userInfo.vue'
 // 面包屑组件,面包屑类型
-import PBreadCrumb, { IBreadCrumb } from '@/base-ui/breadcrumb/index'
+import PBreadCrumb from '@/base-ui/breadcrumb/index'
 // 面包屑数据
 import { pathMapBreadcrumbs } from '@/utils/map.menus'
 import useLogin from '@/stores/login/login'

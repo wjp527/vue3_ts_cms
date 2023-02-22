@@ -1,5 +1,7 @@
 // useSystem的类型
 export interface ISystemState {
-  userList: any[]
-  userCount: number
+  usersList: any[]
+  usersCount: number
+  roleList: any[]
+  roleCount: number
 }

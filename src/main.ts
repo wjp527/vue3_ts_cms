@@ -16,7 +16,7 @@ import 'element-plus/dist/index.css'
 // 按需加载组件
 import { globalRegister } from '@/global/index'
 import useLogin from './stores/login/login'
-
+// element-plus/dist/locale/zh-cn.mjs
 const app = createApp(App)
 // 优雅的局部引入
 app.use(globalRegister)

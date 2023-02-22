@@ -1,13 +1,13 @@
 <template>
   <div class="page-search">
-    <PForm v-bind="formConfig" v-model="formData">
+    <PForm v-bind="searchFormConfig" v-model="formData">
       <template #header>
         <h1 class="header">高级检索</h1>
       </template>
 
       <template #footer>
         <div class="btn">
-          <el-button>
+          <el-button @click="handlerResetClick">
             <el-icon><Refresh /></el-icon>
             重置
           </el-button>
@@ -30,20 +30,26 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 export default defineComponent({
   name: 'UserVue',
   props: {
-    formConfig: {
+    searchFormConfig: {
       type: Object,
       required: true
     }
   },
-  setup() {
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
-    return { formData }
+  setup(props, { emit }) {
+    // 双向绑定的属性应该是由配置文件的field来决定
+    // 1.优化一: formData中的属性应该动态来决定
+    const formItems = props.searchFormConfig?.formItems ?? []
+    const formOriginData: any = {}
+
+    // 2.优化二: 当用户点击重置
+    for (const item of formItems) {
+      formOriginData[item.field] = ''
+    }
+    const formData = ref(formOriginData)
+    const handlerResetClick = () => {
+      formData.value = formOriginData
+    }
+    return { formData, handlerResetClick }
   },
   components: {
     PForm,

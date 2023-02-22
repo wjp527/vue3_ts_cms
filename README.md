@@ -1,5 +1,17 @@
 # vue3-ts-cms
 
+vite项目创建
+
+```bash
+npm init vue@latest -- 会给下好eslint，prettier之类的插件
+```
+
+```bash
+npm create vite@latest -- 就是一个空的vite项目
+```
+
+
+
 ## 项目配置
 
 ### 1. 团队开发 项目配置
@@ -167,9 +179,41 @@ npx husky-init -and npm install
 
 
 
-### 5. git commit 规范
+### 5. 代码提示
 
-#### 5.1 代码提交风格
+`jsconfig.json` (根目录)
+
+```json
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "jsx": "preserve",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  }
+}
+
+```
+
+
+
+
+
+### 6. git commit 规范
+
+#### 6.1 代码提交风格
 
 通常我们的`git commit`会按照统一的风格来提交，这样可以快速定位每次提交的内容，方便之后对版本进行控制
 
@@ -228,7 +272,7 @@ npx commitizen init cz-conventional-changelog --save-dev --save-exact --save-dev
 
 
 
-#### 5.2 代码提交验证
+#### 6.2 代码提交验证
 
 如果我们按照 `cz` 来规范了提交风格，但是依然有同事通过  `git commit` 按照不规范的格式提交应该怎么办呢?
 
@@ -274,7 +318,7 @@ npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 npm run commit
 ```
 
-### 6. vue.config.js的配置
+### 7. vue.config.js的配置
 
 ```js
 const path = require('path')
@@ -309,7 +353,7 @@ module.exports = defineConfig({
 
 
 
-### 7. env
+### 8. env
 
 `.env.development`、`.env.production`、`.env.test` 中变量名不能随便起，如果要的话 需要这样:(在webpack中)
 
