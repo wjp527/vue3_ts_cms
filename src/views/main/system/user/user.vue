@@ -2,10 +2,15 @@
   <div class="user">
     <!-- 表单组件 -->
     <!-- v-model="formData" -->
-    <PageSearch :searchFormConfig="searchFormConfig" />
+    <PageSearch
+      :searchFormConfig="searchFormConfig"
+      @resetBtnClick="handleResetClick"
+      @queryBtnClick="handleQueryClick"
+    />
     <!-- 表格组件 -->
     <div class="content">
       <PageContent
+        ref="pageContentRef"
         :contentTableConfig="contentTableConfig"
         page-name="users"
       ></PageContent>
@@ -27,26 +32,26 @@ import { contentTableConfig } from './config/content.config'
 export default defineComponent({
   name: 'UserVue',
   setup() {
-    // 接收到table组件传过来的数据 check 选中的数据
-    const selectionChange = (payload: any) => {
-      console.log(payload)
-    }
+    // 获取构造函数类型
+    // InstanceType
+    const pageContentRef = ref<InstanceType<typeof PageContent>>()
 
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
+    // 重置
+    const handleResetClick = () => {
+      pageContentRef.value?.getPageData()
+    }
+    // 查询
+    const handleQueryClick = (queryInfo: any) => {
+      pageContentRef.value?.getPageData(queryInfo)
+    }
     return {
       // 表单的配置项
       searchFormConfig,
-      // 是否可选中
-      selectionChange,
       // 表格的配置项
       contentTableConfig,
-      formData
+      handleResetClick,
+      handleQueryClick,
+      pageContentRef
     }
   },
   components: {

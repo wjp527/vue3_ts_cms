@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import useSystem from '@/stores/main/system/system'
 import PTable from '@/base-ui/table'
 import { EditPen, Delete, Refresh } from '@element-plus/icons-vue'
@@ -68,22 +68,27 @@ export default defineComponent({
     const systemStore = useSystem()
 
     // 获取要在表格中展示的数据
-    let dataList: any = []
+    let dataList: any = ref([])
+
+    // 请求数据(模糊搜索)
+    const getPageData = async (queryInfo: any = {}) => {
+      let res = await systemStore.getPageListAsync({
+        pageName: props.pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+          ...queryInfo
+        }
+      })
+      dataList.value = res
+    }
+    getPageData()
 
     // 取出指定类型的数据(用户管理/角色管理)
-    dataList = systemStore.pageListData(props.pageName)
+    dataList.value = systemStore.pageListData(props.pageName)
 
-    const opt = {
-      offset: 0,
-      size: 10
-    }
-    // 请求数据
-    systemStore.getPageListAsync({
-      pageName: props.pageName,
-      opt
-    })
     const selectionChange = () => ({})
-    return { dataList, selectionChange }
+    return { dataList, selectionChange, getPageData }
   },
   components: { PTable, EditPen, Delete, Refresh }
 })

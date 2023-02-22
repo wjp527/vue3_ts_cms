@@ -15,17 +15,18 @@ const useSystem = defineStore('system', {
     // 根据提供的pageName，来return 不同的数据
     pageListData() {
       return (pageName: string) => {
+        console.log(pageName, '==')
         // 第一种方式
-        return (this as any)[`${pageName}List`]
+        // return (this as any)[`${pageName}List`]
         // 第二种方式
-        // switch (pageName) {
-        //   case 'users':
-        //     return this.usersList
-        //   case 'role':
-        //     return this.roleList
-        //   default:
-        //     break
-        // }
+        switch (pageName) {
+          case 'users':
+            return this.usersList
+          case 'role':
+            return this.roleList
+          default:
+            break
+        }
       }
     }
   },
@@ -34,7 +35,7 @@ const useSystem = defineStore('system', {
     async getPageListAsync(payload: any) {
       // 1.获取pageUrl
       const pageName = payload.pageName
-      const opt = payload.opt
+      const opt = payload.queryInfo
       // 第一种方式: 拼接路径
       const pageUrl = pageName + '/list'
 
@@ -60,11 +61,12 @@ const useSystem = defineStore('system', {
           case 'users':
             this.usersList = list
             this.usersCount = totalCount
-            break
+            return this.usersList
           case 'role':
             this.roleList = list
             this.roleCount = totalCount
-            break
+            return this.roleList
+
           default:
             break
         }

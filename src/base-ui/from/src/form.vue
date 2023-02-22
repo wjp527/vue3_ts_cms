@@ -16,6 +16,11 @@
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
+                <!-- 组件的v-model用法 -->
+                <!--
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
+                 -->
                 <el-input
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
@@ -37,7 +42,7 @@
                     v-for="i in item.options"
                     :key="i.value"
                     :value="i.value"
-                    :label="i.label"
+                    :label="i.title"
                   />
                 </el-select>
               </template>
