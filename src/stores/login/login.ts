@@ -17,12 +17,13 @@ import { ILoginState } from './types'
 // 消息组件
 import { ElMessage } from 'element-plus'
 // 生成动态路由
-import { mapMenusToRoutes } from '@/utils/map.menus'
+import { mapMenusToRoutes, mapMenusToPermissions } from '@/utils/map.menus'
 const useLogin = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
     userInfo: {},
-    userMenus: {}
+    userMenus: {},
+    permissions: []
   }),
 
   getters: {},
@@ -95,6 +96,10 @@ const useLogin = defineStore('login', {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+
+      // 收集所有的按钮权限
+      const permissions = mapMenusToPermissions(this.userMenus)
+      this.permissions = permissions
     }
   },
 

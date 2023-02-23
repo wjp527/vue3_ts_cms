@@ -48,8 +48,8 @@ router.beforeEach((to) => {
   if (to.path === '/main') {
     return firstMenu.url
   }
-  console.log(router.getRoutes())
-  console.log(to)
+  // console.log(router.getRoutes())
+  // console.log(to)
 })
 
 export default router

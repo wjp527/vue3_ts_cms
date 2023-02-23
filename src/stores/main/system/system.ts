@@ -6,14 +6,21 @@ import { reqPageListData } from '@/api/main/system/system'
 import { ISystemState } from './types'
 const useSystem = defineStore('system', {
   state: (): ISystemState => ({
+    // 用户管理
     usersList: [],
     usersCount: 0,
+    // 角色管理
     roleList: [],
     roleCount: 0,
+    // 商品管理
     goodsList: [],
     goodsCount: 0,
+    // 菜单管理
     menusList: [],
-    menusCount: 0
+    menusCount: 0,
+    // 部门管理
+    departmentList: [],
+    departmentCount: 0
   }),
   getters: {
     // 根据提供的pageName，来return 不同的数据
@@ -31,6 +38,8 @@ const useSystem = defineStore('system', {
             return this.goodsList
           case 'menu':
             return this.menusList
+          case 'department':
+            return this.departmentList
           default:
             break
         }
@@ -97,6 +106,13 @@ const useSystem = defineStore('system', {
             return {
               list: this.menusList,
               count: this.menusCount
+            }
+          case 'department':
+            this.departmentList = list
+            this.departmentCount = totalCount
+            return {
+              list: this.departmentList,
+              count: this.departmentCount
             }
           default:
             break

@@ -11,9 +11,11 @@
       <!-- header中的插槽 -->
       <!-- <template #header /> -->
       <template #haderHandler>
-        <el-button type="primary">新增用户</el-button>
+        <el-button type="primary" v-if="isCreate">新增用户</el-button>
         <el-button>
-          <el-icon><Refresh /></el-icon>
+          <el-icon>
+            <Refresh />
+          </el-icon>
         </el-button>
       </template>
       <template #footer />
@@ -59,11 +61,15 @@
 
       <!-- 动态插槽 -->
       <template #handler>
-        <el-button circle type="primary">
-          <el-icon><EditPen /></el-icon
-        ></el-button>
-        <el-button circle type="danger">
-          <el-icon><Delete /></el-icon>
+        <el-button circle type="primary" v-if="isUpdate">
+          <el-icon>
+            <EditPen />
+          </el-icon>
+        </el-button>
+        <el-button circle type="danger" v-if="isDelete">
+          <el-icon>
+            <Delete />
+          </el-icon>
         </el-button>
       </template>
     </PTable>
@@ -75,6 +81,7 @@ import { defineComponent, ref, watch, computed } from 'vue'
 import useSystem from '@/stores/main/system/system'
 import PTable from '@/base-ui/table'
 import { EditPen, Delete, Refresh } from '@element-plus/icons-vue'
+import { usePermission } from '@/hooks/usePermission'
 
 export default defineComponent({
   props: {
@@ -93,6 +100,12 @@ export default defineComponent({
     // 获取store
     const systemStore = useSystem()
 
+    // 获取操作的权限
+    const isCreate = usePermission(props.pageName, 'create')
+    const isUpdate = usePermission(props.pageName, 'update')
+    const isDelete = usePermission(props.pageName, 'delete')
+    const isQuery = usePermission(props.pageName, 'query')
+
     // 1.双向绑定pageInfo
     const pageInfo = ref({
       currentPage: 1,
@@ -100,13 +113,13 @@ export default defineComponent({
     })
 
     watch(pageInfo, () => getPageData())
-    console.log(pageInfo, '==')
 
     // 2.获取要在表格中展示的数据
     let dataList: any = ref([])
     let dataCount = ref(0)
     // 请求数据(模糊匹配)
     const getPageData = async (queryInfo: any = {}) => {
+      if (!isQuery) return
       let res = await systemStore.getPageListAsync({
         pageName: props.pageName,
         queryInfo: {
@@ -151,7 +164,10 @@ export default defineComponent({
       getPageData,
       dataCount,
       pageInfo,
-      otherPropSlots
+      otherPropSlots,
+      isCreate,
+      isDelete,
+      isUpdate
     }
   },
   components: { PTable, EditPen, Delete, Refresh }
