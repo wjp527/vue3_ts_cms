@@ -16,6 +16,7 @@
       :data="data"
       stripe
       border
+      v-bind="childrenProps"
       @selection-change="handleSelectChange"
     >
       <el-table-column
@@ -32,7 +33,8 @@
         width="80"
       ></el-table-column>
       <template v-for="propItem in propsList" :key="propItem.prop">
-        <el-table-column v-bind="propItem" align="center">
+        <!-- show-overflow-tooltip: 文字过长会在一行上显示，超出的回隐藏掉，鼠标碰上去的话，就会显示 -->
+        <el-table-column v-bind="propItem" align="center" show-overflow-tooltip>
           <template #default="scope">
             <!-- 动态插槽 -->
             <!-- 没有该插槽，就显示默认数据 -->
@@ -44,17 +46,17 @@
         </el-table-column>
       </template>
     </el-table>
-    <div class="footer">
+    <div class="footer" v-if="isShowPagination">
       <slot name="footer">
         <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[100, 200, 300, 400]"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          :page-sizes="[10, 20, 30, 40]"
           :small="small"
           :disabled="disabled"
           :background="background"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="usersCount"
+          :total="count"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -64,9 +66,7 @@
 </template>
 
 <script lang="ts">
-import useSystem from '@/stores/main/system/system'
-import { defineComponent, ref } from 'vue'
-import { storeToRefs } from 'pinia'
+import { defineComponent, ref, PropType } from 'vue'
 export default defineComponent({
   name: 'PTable',
   props: {
@@ -74,29 +74,53 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    // 总数据
     data: {
       type: Array,
       required: true
     },
+    // 数据总条数
+    count: {
+      type: Number,
+      default: 0
+    },
+    // 配置项
     propsList: {
-      type: Array,
+      type: Array as PropType<any>,
       required: true
     },
+    // 是否展示索引
     showIndexColumn: {
       type: Boolean,
       default: false
     },
+    // 是否可以选择
     showSelectColumn: {
       type: Boolean,
       default: false
+    },
+    // pageSize和currentPage
+    page: {
+      type: Object,
+      default: () => ({
+        currentPage: 0,
+        pageSize: 10
+      })
+    },
+    // 是否可展开
+    childrenProps: {
+      type: Object,
+      default: () => ({})
+    },
+    // 是否展示分页器
+    isShowPagination: {
+      type: Boolean,
+      default: true
     }
   },
   // 父传子的事件
-  emits: ['selectionChange'],
+  emits: ['selectionChange', 'update:page'],
   setup(props, { emit }) {
-    const systemStore = useSystem()
-    const { usersList, usersCount } = storeToRefs(systemStore)
-
     const opt = {
       offset: 0,
       size: 10
@@ -110,15 +134,15 @@ export default defineComponent({
     const background = ref(true)
     const disabled = ref(false)
 
-    const handleSizeChange = (val: number) => {
-      console.log(`${val} items per page`)
+    // 分页器
+    const handleSizeChange = (pageSize: number) => {
+      emit('update:page', { ...props.page, pageSize })
     }
-    const handleCurrentChange = (val: number) => {
-      console.log(`current page: ${val}`)
-      // opt.offset = opt.size
-      systemStore.getPageListAsync(opt)
+    const handleCurrentChange = (currentPage: number) => {
+      emit('update:page', { ...props.page, currentPage })
     }
 
+    // 是否选中
     const handleSelectChange = (value: any) => {
       emit('selectionChange', value)
     }
@@ -131,8 +155,7 @@ export default defineComponent({
       background,
       disabled,
       handleSizeChange,
-      handleCurrentChange,
-      usersCount
+      handleCurrentChange
     }
   }
 })

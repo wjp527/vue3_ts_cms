@@ -13,13 +13,22 @@
         ref="pageContentRef"
         :contentTableConfig="contentTableConfig"
         page-name="users"
-      ></PageContent>
+      >
+        <template #status="slotProps">
+          <el-button
+            plain
+            size="small"
+            :type="slotProps.row.enable ? 'primary' : 'danger'"
+            >{{ slotProps.row.enable ? '已启用' : '已禁用' }}</el-button
+          >
+        </template>
+      </PageContent>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 // 搜索组件
 import PageSearch from '@/components/page-search'
 // 表单的配置项
@@ -29,21 +38,14 @@ import PageContent from '@/components/page-content'
 // 表格的配置项
 import { contentTableConfig } from './config/content.config'
 
+// hooks
+import { usePageSearch } from '@/hooks/usePageSearch'
 export default defineComponent({
   name: 'UserVue',
   setup() {
     // 获取构造函数类型
-    // InstanceType
-    const pageContentRef = ref<InstanceType<typeof PageContent>>()
-
-    // 重置
-    const handleResetClick = () => {
-      pageContentRef.value?.getPageData()
-    }
-    // 查询
-    const handleQueryClick = (queryInfo: any) => {
-      pageContentRef.value?.getPageData(queryInfo)
-    }
+    const { handleResetClick, handleQueryClick, pageContentRef } =
+      usePageSearch()
     return {
       // 表单的配置项
       searchFormConfig,

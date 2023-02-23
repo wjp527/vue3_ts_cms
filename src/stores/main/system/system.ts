@@ -9,13 +9,16 @@ const useSystem = defineStore('system', {
     usersList: [],
     usersCount: 0,
     roleList: [],
-    roleCount: 0
+    roleCount: 0,
+    goodsList: [],
+    goodsCount: 0,
+    menusList: [],
+    menusCount: 0
   }),
   getters: {
     // 根据提供的pageName，来return 不同的数据
     pageListData() {
       return (pageName: string) => {
-        console.log(pageName, '==')
         // 第一种方式
         // return (this as any)[`${pageName}List`]
         // 第二种方式
@@ -24,9 +27,18 @@ const useSystem = defineStore('system', {
             return this.usersList
           case 'role':
             return this.roleList
+          case 'goods':
+            return this.goodsList
+          case 'menu':
+            return this.menusList
           default:
             break
         }
+      }
+    },
+    pageListCount() {
+      return (pageName: string) => {
+        return (this as any)[`${pageName}Count`]
       }
     }
   },
@@ -61,12 +73,31 @@ const useSystem = defineStore('system', {
           case 'users':
             this.usersList = list
             this.usersCount = totalCount
-            return this.usersList
+            return {
+              list: this.usersList,
+              count: this.usersCount
+            }
           case 'role':
             this.roleList = list
             this.roleCount = totalCount
-            return this.roleList
-
+            return {
+              list: this.roleList,
+              count: this.roleCount
+            }
+          case 'goods':
+            this.goodsList = list
+            this.goodsCount = totalCount
+            return {
+              list: this.goodsList,
+              count: this.goodsCount
+            }
+          case 'menu':
+            this.menusList = list
+            this.menusCount = totalCount
+            return {
+              list: this.menusList,
+              count: this.menusCount
+            }
           default:
             break
         }
