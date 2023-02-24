@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 
 // 请求接口
-import { reqPageListData } from '@/api/main/system/system'
+import { reqPageListData, reqPageListDelById } from '@/api/main/system/system'
 // useSystem 中的类型
 import { ISystemState } from './types'
+import { ElMessage } from 'element-plus'
 const useSystem = defineStore('system', {
   state: (): ISystemState => ({
     // 用户管理
@@ -118,6 +119,22 @@ const useSystem = defineStore('system', {
             break
         }
       }
+    },
+    // 删除数据
+    async getPageListDelAsync(payload: any) {
+      // 获取pageName
+      const pageName = payload.pageName
+      // 获取请求的路径
+      const pageUrl = pageName + '/' + payload.id
+      await reqPageListDelById(pageUrl)
+      //  重新请求最新的数据
+      this.getPageListAsync({
+        pageName: payload.pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
     }
   },
 

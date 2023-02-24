@@ -9,9 +9,24 @@
     >
       <!-- 具名插槽 -->
       <!-- header中的插槽 -->
-      <!-- <template #header /> -->
+
       <template #haderHandler>
-        <el-button type="primary" v-if="isCreate">新增用户</el-button>
+        <el-button type="primary" v-if="isCreate">
+          <el-icon><Plus /></el-icon>{{ contentTableConfig.add }}</el-button
+        >
+        <el-popconfirm
+          title="Are you sure to delete this?"
+          v-if="isDelete"
+          @confirm="removeById"
+          @cancel="handleCancel"
+        >
+          <template #reference>
+            <el-button type="danger">
+              <el-icon> <Delete /> </el-icon>
+              {{ contentTableConfig.remove }}
+            </el-button>
+          </template>
+        </el-popconfirm>
         <el-button>
           <el-icon>
             <Refresh />
@@ -60,17 +75,27 @@
       </template>
 
       <!-- 动态插槽 -->
-      <template #handler>
+      <template #handler="scope">
         <el-button circle type="primary" v-if="isUpdate">
           <el-icon>
             <EditPen />
           </el-icon>
         </el-button>
-        <el-button circle type="danger" v-if="isDelete">
-          <el-icon>
-            <Delete />
-          </el-icon>
-        </el-button>
+
+        <el-popconfirm
+          title="是否要删除?"
+          v-if="isDelete"
+          @confirm="handleConfirm(scope.row)"
+          @cancel="handleCancel"
+        >
+          <template #reference>
+            <el-button circle type="danger">
+              <el-icon>
+                <Delete />
+              </el-icon>
+            </el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </PTable>
   </div>
@@ -80,8 +105,9 @@
 import { defineComponent, ref, watch, computed } from 'vue'
 import useSystem from '@/stores/main/system/system'
 import PTable from '@/base-ui/table'
-import { EditPen, Delete, Refresh } from '@element-plus/icons-vue'
+import { EditPen, Delete, Refresh, Plus } from '@element-plus/icons-vue'
 import { usePermission } from '@/hooks/usePermission'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   props: {
@@ -100,6 +126,11 @@ export default defineComponent({
     // 获取store
     const systemStore = useSystem()
 
+    // const opt = ref({
+    //   pageName: props.pageName,
+    //   id: 0
+    // })
+
     // 获取操作的权限
     const isCreate = usePermission(props.pageName, 'create')
     const isUpdate = usePermission(props.pageName, 'update')
@@ -117,6 +148,8 @@ export default defineComponent({
     // 2.获取要在表格中展示的数据
     let dataList: any = ref([])
     let dataCount = ref(0)
+
+    let opt: any[] = []
     // 请求数据(模糊匹配)
     const getPageData = async (queryInfo: any = {}) => {
       if (!isQuery) return
@@ -144,7 +177,9 @@ export default defineComponent({
     // 这些数据不要是响应式的
     // const dataList = computed(() => systemStore.pageListData(props.pageName))
     // const dataCount = computed(() => systemStore.pageListCount(props.pageName)
-    const selectionChange = () => ({})
+    const selectionChange = (payload: any) => {
+      opt = payload
+    }
 
     // 4.获取其他的动态插槽名称
     // props.contentTableConfig?.propsList: 获取表头数据
@@ -158,6 +193,43 @@ export default defineComponent({
       }
     )
 
+    // 删除用户列表的事件
+    const handleConfirm = async (row: any) => {
+      const opt = {
+        pageName: props.pageName,
+        id: row.id
+      }
+      systemStore.getPageListDelAsync(opt)
+
+      getPageData()
+      ElMessage.success('删除成功')
+    }
+    // 批量删除
+    const removeById = async () => {
+      // console.log(opt.length)
+      for (let i = 0; i < opt.length; i++) {
+        opt[i].pageName = props.pageName
+        systemStore.getPageListDelAsync(opt[i])
+        if (i === opt.length - 1) {
+          let res = await systemStore.getPageListAsync({
+            pageName: props.pageName,
+            queryInfo: {
+              // 偏移量
+              offset:
+                (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
+              // 每页的条数
+              size: pageInfo.value.pageSize
+            }
+          })
+
+          dataList.value = res?.list
+        }
+      }
+    }
+    const handleCancel = () => {
+      console.log('cannel')
+    }
+
     return {
       dataList,
       selectionChange,
@@ -167,10 +239,13 @@ export default defineComponent({
       otherPropSlots,
       isCreate,
       isDelete,
-      isUpdate
+      isUpdate,
+      handleConfirm,
+      handleCancel,
+      removeById
     }
   },
-  components: { PTable, EditPen, Delete, Refresh }
+  components: { PTable, EditPen, Delete, Refresh, Plus }
 })
 </script>
 

@@ -5,6 +5,8 @@ export const contentTableConfig = {
   showIndexColumn: true,
   // 是否可选中
   showSelectColumn: true,
+  add: '新增用户',
+  remove: '批量删除',
   // 表头数据
   propsList: [
     {

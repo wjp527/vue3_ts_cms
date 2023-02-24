@@ -8,3 +8,10 @@ export function reqPageListData(url: string, data: any) {
     data
   })
 }
+
+// 删除数据
+export function reqPageListDelById(url: string) {
+  return pRequest.delete<IDataType>({
+    url
+  })
+}
