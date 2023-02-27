@@ -10,6 +10,8 @@ import {
   reqUserMenuByRoleId
 } from '@/api/login/login'
 
+import useCommon from '../common'
+
 // 用户类型的接口
 import { IAccount } from '@/api/login/types'
 // 登录类型的接口
@@ -21,8 +23,11 @@ import { mapMenusToRoutes, mapMenusToPermissions } from '@/utils/map.menus'
 const useLogin = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
+    // 用户信息
     userInfo: {},
+    // 侧边栏数据
     userMenus: {},
+    // 所有的权限
     permissions: []
   }),
 
@@ -34,9 +39,14 @@ const useLogin = defineStore('login', {
       const res = await accountLoginRequest(payload)
       const { id, token } = res.data
 
+      const commonStore = useCommon()
       localCache.setCache('token', token)
       if (token) {
         this.token = token
+        commonStore.getInitialDataAsync({
+          offset: 0,
+          size: 10
+        })
         this.getUserInfo(id)
 
         ElMessage({
@@ -63,11 +73,18 @@ const useLogin = defineStore('login', {
       // 获取用户的动态路由
       this.getsMenus(menu.data)
     },
+    // 本地加载
     // 刷新页面都会执行这个方法
     loadLocalLogin() {
       const token = localCache.getCache('token')
+      const commonStore = useCommon()
       if (token) {
         this.token = token
+        // 获取部门管理/角色管理的数据
+        commonStore.getInitialDataAsync({
+          offset: 0,
+          size: 10
+        })
       }
       const userInfo = localCache.getCache('userInfo')
       if (userInfo) {

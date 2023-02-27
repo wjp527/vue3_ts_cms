@@ -1,5 +1,6 @@
 import useLogin from '@/stores/login/login'
 
+// 获取操作的权限
 export function usePermission(pageName: string, hanldeName: string) {
   const loginStore = useLogin()
   const permission = loginStore.permissions

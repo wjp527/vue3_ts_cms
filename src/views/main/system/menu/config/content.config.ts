@@ -1,5 +1,6 @@
 export const contentTableConfig = {
   title: '菜单列表',
+  add: '新增菜单',
   propsList: [
     {
       prop: 'name',

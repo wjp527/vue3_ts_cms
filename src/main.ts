@@ -19,6 +19,7 @@ import useLogin from './stores/login/login'
 
 // 全局注册组件
 import PageContent from './components/page-content/src/page-content.vue'
+
 // element-plus/dist/locale/zh-cn.mjs
 const app = createApp(App)
 // 优雅的局部引入

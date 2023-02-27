@@ -11,11 +11,11 @@
       <!-- header中的插槽 -->
 
       <template #haderHandler>
-        <el-button type="primary" v-if="isCreate">
+        <el-button type="primary" v-if="isCreate" @click="handleNewClick">
           <el-icon><Plus /></el-icon>{{ contentTableConfig.add }}</el-button
         >
         <el-popconfirm
-          title="Are you sure to delete this?"
+          title="是否批量删除"
           v-if="isDelete"
           @confirm="removeById"
           @cancel="handleCancel"
@@ -23,7 +23,7 @@
           <template #reference>
             <el-button type="danger">
               <el-icon> <Delete /> </el-icon>
-              {{ contentTableConfig.remove }}
+              批量删除
             </el-button>
           </template>
         </el-popconfirm>
@@ -76,7 +76,12 @@
 
       <!-- 动态插槽 -->
       <template #handler="scope">
-        <el-button circle type="primary" v-if="isUpdate">
+        <el-button
+          circle
+          type="primary"
+          v-if="isUpdate"
+          @click="handleEditClick(scope.row)"
+        >
           <el-icon>
             <EditPen />
           </el-icon>
@@ -103,7 +108,10 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, computed } from 'vue'
+// store
 import useSystem from '@/stores/main/system/system'
+import useCommon from '@/stores/common'
+
 import PTable from '@/base-ui/table'
 import { EditPen, Delete, Refresh, Plus } from '@element-plus/icons-vue'
 import { usePermission } from '@/hooks/usePermission'
@@ -122,7 +130,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['newBtnClick', 'editBtnClick'],
+  setup(props, { emit }) {
     // 获取store
     const systemStore = useSystem()
 
@@ -146,8 +155,8 @@ export default defineComponent({
     watch(pageInfo, () => getPageData())
 
     // 2.获取要在表格中展示的数据
-    let dataList: any = ref([])
-    let dataCount = ref(0)
+    // let dataList: any = ref([])
+    // let dataCount = ref(0)
 
     let opt: any[] = []
     // 请求数据(模糊匹配)
@@ -164,19 +173,23 @@ export default defineComponent({
         }
       })
 
-      dataList.value = res?.list
-      dataCount.value = res?.count ?? 0
+      console.log(res)
+
+      // dataList.value = res?.list
+      // dataCount.value = res?.count ?? 0
     }
     getPageData()
 
     // 3.取出指定类型的数据(用户管理/角色管理)
     //  第一种方式
-    dataList.value = systemStore.pageListData(props.pageName)
-    dataCount.value = systemStore.pageListCount(props.pageName)
+    // dataList.value = systemStore.pageListData(props.pageName)
+    // dataCount.value = systemStore.pageListCount(props.pageName)
     // 第二种方式
     // 这些数据不要是响应式的
-    // const dataList = computed(() => systemStore.pageListData(props.pageName))
-    // const dataCount = computed(() => systemStore.pageListCount(props.pageName)
+    const dataList = computed(() => systemStore.pageListData(props.pageName))
+    const dataCount = computed(() => systemStore.pageListCount(props.pageName))
+
+    // console.log(dataList, '=------')
     const selectionChange = (payload: any) => {
       opt = payload
     }
@@ -222,12 +235,23 @@ export default defineComponent({
             }
           })
 
-          dataList.value = res?.list
+          // dataList.value = res?.list
         }
       }
     }
+    // 取消批量删除
     const handleCancel = () => {
       console.log('cannel')
+    }
+
+    // 打开添加弹框
+    const handleNewClick = () => {
+      emit('newBtnClick')
+    }
+
+    // 打开修改弹窗
+    const handleEditClick = (row: any) => {
+      emit('editBtnClick', row)
     }
 
     return {
@@ -242,7 +266,10 @@ export default defineComponent({
       isUpdate,
       handleConfirm,
       handleCancel,
-      removeById
+      removeById,
+      // 打开用户管理的弹窗
+      handleNewClick,
+      handleEditClick
     }
   },
   components: { PTable, EditPen, Delete, Refresh, Plus }

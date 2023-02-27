@@ -1,5 +1,6 @@
 export const contentTableConfig = {
   title: '部门管理',
+  add: '新增部门',
   propsList: [
     {
       prop: 'id',

@@ -8,7 +8,9 @@ export function formatUtcString(
   utcString: string,
   fortmat: string = DATE_TIME_FORMAT
 ) {
-  return dayjs.utc(utcString).format(fortmat)
+  // 转换成东八区
+  // 往后推迟8个小时
+  return dayjs.utc(utcString).utcOffset(8).format(fortmat)
 }
 
 // 格式化日期 (时间戳格式)

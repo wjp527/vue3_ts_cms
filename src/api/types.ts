@@ -3,3 +3,9 @@ export interface IDataType<T = any> {
   code: number
   data: T
 }
+
+// 请求部门数据和角色管理数据的参数类型
+export interface IDeparentAndRole {
+  offset: string
+  size: string
+}

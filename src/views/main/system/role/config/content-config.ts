@@ -1,5 +1,6 @@
 export const contentTableConfig = {
-  title: '用户列表',
+  title: '用户角色',
+  add: '新增角色',
   propsList: [
     {
       prop: 'name',

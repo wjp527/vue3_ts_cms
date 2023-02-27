@@ -75,50 +75,60 @@ const useSystem = defineStore('system', {
 
       // 2.对页面进行发请求
       const res = await reqPageListData(pageUrl, opt)
+
       const { list, totalCount } = res.data
+      console.log(list)
       // 3.将数据存储到state中
-      if (list.length > 0) {
-        // 第一种方式
-        switch (pageName) {
-          case 'users':
-            this.usersList = list
-            this.usersCount = totalCount
-            return {
-              list: this.usersList,
-              count: this.usersCount
-            }
-          case 'role':
-            this.roleList = list
-            this.roleCount = totalCount
-            return {
-              list: this.roleList,
-              count: this.roleCount
-            }
-          case 'goods':
-            this.goodsList = list
-            this.goodsCount = totalCount
-            return {
-              list: this.goodsList,
-              count: this.goodsCount
-            }
-          case 'menu':
-            this.menusList = list
-            this.menusCount = totalCount
-            return {
-              list: this.menusList,
-              count: this.menusCount
-            }
-          case 'department':
-            this.departmentList = list
-            this.departmentCount = totalCount
-            return {
-              list: this.departmentList,
-              count: this.departmentCount
-            }
-          default:
-            break
-        }
+      // if (list.length > 0) {
+      // 第一种方式
+      switch (pageName) {
+        case 'users':
+          this.usersList = list
+          this.usersCount = totalCount
+          break
+        // return {
+        //   list: this.usersList,
+        //   count: this.usersCount
+        // }
+        case 'role':
+          this.roleList = list
+          this.roleCount = totalCount
+          break
+        // return {
+        //   list: this.roleList,
+        //   count: this.roleCount
+        // }
+        case 'goods':
+          this.goodsList = list
+          this.goodsCount = totalCount
+          break
+        // return {
+        //   list: this.goodsList,
+        //   count: this.goodsCount
+        // }
+        case 'menu':
+          this.menusList = list
+          this.menusCount = totalCount
+          break
+        // return {
+        //   list: this.menusList,
+        //   count: this.menusCount
+        // }
+        case 'department':
+          this.departmentList = list
+          this.departmentCount = totalCount
+          break
+        // return {
+        //   list: this.departmentList,
+        //   count: this.departmentCount
+        // }
+        default:
+          break
       }
+      // } else {
+      //   this.
+      //   return { list: list, count: 0 }
+      // }
     },
     // 删除数据
     async getPageListDelAsync(payload: any) {

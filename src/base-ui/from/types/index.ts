@@ -12,6 +12,8 @@ export interface IFormItem {
   options?: any[]
   // 针对于特殊的属性
   otherOptions?: any
+  // form表单中的标签是否要隐藏掉(input/select)
+  isHidden?: boolean
 }
 
 // 表单的总体配置项

@@ -4,13 +4,16 @@
       <slot name="header"></slot>
     </div>
 
-    <el-form :model="formItems" :label-width="labelWidth">
+    <!-- :model="formItems" -->
+    <el-form :label-width="labelWidth">
       <el-row>
-        <template v-for="item in formItems" :key="item.id">
+        <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
+            <!-- :prop="item.field" -->
             <el-form-item
+              v-if="!item?.isHidden"
               :label="item.label"
-              :rule="item.rules"
+              :rules="item.rules"
               :style="itemStyle"
             >
               <template
@@ -23,8 +26,8 @@
                  -->
                 <el-input
                   :placeholder="item.placeholder"
-                  :show-password="item.type === 'password'"
                   v-bind="item.otherOptions"
+                  :show-password="item.type === 'password'"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="handleValueChange($event, item.field)"
                 />
@@ -49,8 +52,8 @@
               <template v-else-if="item.type === 'datepicker'">
                 <!-- 将 item.otherOptions 的属性全部绑到 el-date-picker组件中 -->
                 <el-date-picker
-                  v-bind="item.otherOptions"
                   style="width: 100px"
+                  v-bind="item.otherOptions"
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
@@ -73,13 +76,13 @@ import { IFormItem } from '../types/index'
 export default defineComponent({
   name: 'FromVue',
   props: {
-    // PForm  组件传来的formData数据
+    // PForm  组件传来的formData数据 配置参数
     modelValue: {
       type: Object,
       required: true
     },
     formItems: {
-      // 类型断言,要求formItems IFormItem 类型的
+      // 类型断言,要求formItems是 IFormItem 类型的
       type: Array as PropType<IFormItem[]>,
       // 写默认值的时候,如果是对象,数组类型的,就写箭头函数
       default: () => []

@@ -25,17 +25,7 @@ export const searchFormConfig: IForm = {
       field: 'cellphone',
       type: 'input',
       label: '电话号码',
-      placeholder: '请输入电话号码',
-      options: [
-        {
-          label: '篮球',
-          value: '篮球basketball'
-        },
-        {
-          label: '足球',
-          value: '足球football'
-        }
-      ]
+      placeholder: '请输入电话号码'
     },
     {
       field: 'enable',

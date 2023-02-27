@@ -34,7 +34,8 @@ import {
   ElTag,
   ElPagination,
   ElImage,
-  ElPopconfirm
+  ElPopconfirm,
+  ElDialog
 } from 'element-plus'
 
 const components = [
@@ -72,7 +73,8 @@ const components = [
   ElTag,
   ElPagination,
   ElImage,
-  ElPopconfirm
+  ElPopconfirm,
+  ElDialog
 ]
 export default function (app: App): void {
   for (const component of components) {

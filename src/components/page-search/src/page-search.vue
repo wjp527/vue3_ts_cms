@@ -69,6 +69,10 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.page-search {
+  border-top: 20px solid #f5f5f5;
+  border-bottom: 20px solid #f5f5f5;
+}
 .header {
   text-align: center;
   padding: 20px 0;
