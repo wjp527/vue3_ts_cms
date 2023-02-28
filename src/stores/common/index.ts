@@ -6,6 +6,7 @@ import {
   reqGets,
   reqGetDepartment,
   reqGetRole,
+  reqMenuPageData,
   reqCreatePageData,
   reqEditPageData
 } from '@/api/common'
@@ -15,7 +16,9 @@ const useCommon = defineStore('common', {
     // 全部的部门
     entireDepartment: [],
     // 全部的角色
-    entireRole: []
+    entireRole: [],
+    // 全部的菜单列表
+    menuList: []
   }),
 
   getters: {},
@@ -30,12 +33,17 @@ const useCommon = defineStore('common', {
       reqGetDepartment('/department/list', payload).then((res) => {
         this.entireDepartment = res.data.list
       })
+      // 角色数据
       reqGetRole('/role/list', payload).then((res) => {
-        console.log(payload)
         this.entireRole = res.data.list
+      })
+      // 菜单数据
+      reqMenuPageData('/menu/list').then((res) => {
+        this.menuList = res.data.list
       })
     },
 
+    // 新建数据
     async createPageDataAsync(payload: any) {
       // 1. 创建数据的请求
       const { pageName, newData } = payload
@@ -57,6 +65,7 @@ const useCommon = defineStore('common', {
       })
       // }, 1000)
     },
+    // 修改数据
     async EditPageDataAsync(payload: any) {
       // 1.编辑数据的请求
       const { pageName, id, editData } = payload

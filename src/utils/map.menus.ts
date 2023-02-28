@@ -100,4 +100,23 @@ export function mapMenusToPermissions(userMenus: any[]) {
   return permissions
 }
 
+// 遍历用户所拥有的角色权限
+export function MenuLeafKeys(menuList: any[]) {
+  const leftKeys: number[] = []
+  // 递归
+  const _recurseGetLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        _recurseGetLeaf(menu.children)
+      } else {
+        leftKeys.push(menu.id)
+      }
+    }
+  }
+
+  _recurseGetLeaf(menuList)
+
+  return leftKeys
+}
+
 export { firstMenu }

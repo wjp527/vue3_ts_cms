@@ -39,3 +39,11 @@ export const reqEditPageData = (url: string, editData: any) => {
     data: editData
   })
 }
+
+// 获取菜单数据
+// /menu/list
+export const reqMenuPageData = (url: string) => {
+  return pRequest.post<IDataType>({
+    url
+  })
+}

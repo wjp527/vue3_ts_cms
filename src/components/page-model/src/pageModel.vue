@@ -2,7 +2,7 @@
   <div class="page-model">
     <el-dialog
       v-model="dialogVisible"
-      title="新建用户"
+      :title="modelConfig.add"
       width="30%"
       center
       :before-close="handleClose"
@@ -10,6 +10,7 @@
     >
       <!-- 表单组件 -->
       <PForm v-bind="modelConfig" v-model="formData"></PForm>
+      <slot></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -41,6 +42,10 @@ export default defineComponent({
     },
     // 要回显的数据
     defaultInfo: {
+      type: Object,
+      default: () => ({})
+    },
+    otherInfo: {
       type: Object,
       default: () => ({})
     },
@@ -83,24 +88,14 @@ export default defineComponent({
         let opt = {
           pageName: props.pageName,
           id: props.defaultInfo.id,
-          editData: { ...formData.value }
+          editData: { ...formData.value, ...props.otherInfo }
         }
         commonStore.EditPageDataAsync(opt)
-
-        const systemStore = useSystem()
-        // let res = await systemStore.getPageListAsync({
-        //   pageName: props.pageName,
-        //   queryInfo: {
-        //     offset: 0,
-        //     size: 10
-        //   }
-        // })
-        // formData.value = res?.list
       } else {
         // 新建
         let opt = {
           pageName: props.pageName,
-          newData: { ...formData.value }
+          newData: { ...formData.value, ...props.otherInfo }
         }
         commonStore.createPageDataAsync(opt)
       }

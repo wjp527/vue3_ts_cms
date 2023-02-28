@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import pageModel from '@/components/page-model'
 
-type callBackFn = () => void
+type callBackFn = (item?: any) => void
 // 打开添加/修改的弹出框
 export function usePageModel(newCb?: callBackFn, editCb?: callBackFn) {
   // pageModel类型的ref
@@ -27,7 +27,7 @@ export function usePageModel(newCb?: callBackFn, editCb?: callBackFn) {
     if (pageModelRef.value) {
       pageModelRef.value.dialogVisible = true
     }
-    editCb && editCb()
+    editCb && editCb(row)
   }
 
   return [pageModelRef, handleNewData, handleEditData, defaultInfo]
