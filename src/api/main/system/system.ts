@@ -15,9 +15,3 @@ export function reqPageListDelById(url: string) {
     url
   })
 }
-
-export function getAmountList() {
-  return pRequest.get<IDataType>({
-    url: '/goods/amount/list'
-  })
-}
