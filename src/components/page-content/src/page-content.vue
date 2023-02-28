@@ -173,8 +173,6 @@ export default defineComponent({
         }
       })
 
-      console.log(res)
-
       // dataList.value = res?.list
       // dataCount.value = res?.count ?? 0
     }

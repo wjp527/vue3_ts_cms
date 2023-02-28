@@ -1,6 +1,7 @@
 import { IBreadCrumb } from '@/base-ui/breadcrumb'
 import { RouteRecordRaw } from 'vue-router'
 let firstMenu: any = null
+let firstRoute: RouteRecordRaw | undefined = undefined
 // 计算动态路由
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
@@ -41,8 +42,9 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
           routes.push(route)
         }
         // 获取第一个二级的id
-        if (!firstMenu) {
+        if (!firstRoute && !firstMenu) {
           firstMenu = menu
+          firstRoute = route
         }
       } else {
         _recurseGetRoute(menu.children)
@@ -58,12 +60,12 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
 // 获取面包屑数据
 export function pathMapBreadcrumbs(userMenus: any[], currentPath: string) {
   const breadcrumb: IBreadCrumb[] = []
-  pathMapMenu(userMenus, currentPath, breadcrumb)
+  pathMapToMenu(userMenus, currentPath, breadcrumb)
   return breadcrumb
 }
 
 // 根据导航栏上的路由路径,进行获取左侧侧边栏的默认展示字段
-export function pathMapMenu(
+export function pathMapToMenu(
   Menu: any[],
   currentPath: string,
   breadcrumb?: IBreadCrumb[]
@@ -71,7 +73,7 @@ export function pathMapMenu(
   for (const item of Menu) {
     // 继续向下遍历
     if (item.type === 1) {
-      const findMenu = pathMapMenu(item.children ?? [], currentPath)
+      const findMenu = pathMapToMenu(item.children ?? [], currentPath)
       if (findMenu) {
         breadcrumb?.push({ name: item.name })
         breadcrumb?.push({ name: findMenu.name })
@@ -119,4 +121,4 @@ export function MenuLeafKeys(menuList: any[]) {
   return leftKeys
 }
 
-export { firstMenu }
+export { firstMenu, firstRoute }

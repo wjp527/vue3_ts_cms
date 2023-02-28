@@ -47,31 +47,26 @@ const useLogin = defineStore('login', {
           offset: 0,
           size: 10
         })
-        this.getUserInfo(id)
 
+        // 获取某个用户信息
+        const users = await requestUserInfoById(id)
+        this.userInfo = users.data
         ElMessage({
           message: '登录成功',
           type: 'success'
         })
 
+        // 获取侧边栏数据(用户所拥有的权限)  这里是获取用户的权限id，不是用户id
+        const menu = await reqUserMenuByRoleId(this.userInfo.role.id)
+        this.userMenus = menu.data
+
+        localCache.setCache('menus', menu.data)
+
+        // 获取用户的动态路由
+        this.getsMenus(menu.data)
         // 跳转到首页
         router.push('/main')
       }
-    },
-    async getUserInfo(id: number) {
-      // 获取某个用户信息
-      const users = await requestUserInfoById(id)
-      this.userInfo = users.data
-      this.getMenu(id)
-    },
-    async getMenu(id: number) {
-      // 获取侧边栏数据(用户所拥有的权限)
-      const menu = await reqUserMenuByRoleId(id)
-      this.userMenus = menu.data
-      localCache.setCache('menus', menu.data)
-
-      // 获取用户的动态路由
-      this.getsMenus(menu.data)
     },
     // 本地加载
     // 刷新页面都会执行这个方法
@@ -94,15 +89,13 @@ const useLogin = defineStore('login', {
       // const userMenus = JSON.parse(JSON.stringify(this.userMenus))
       if (localCache.getCache('menus')) {
         const userMenus = localCache.getCache('menus')
-        this.getsMenus(userMenus)
+        const routes = mapMenusToRoutes(userMenus)
+        routes.forEach((route) => {
+          router.addRoute('main', route)
+        })
       } else {
         router.push('/login')
       }
-
-      // const routes = mapMenusToRoutes(userMenus)
-      // routes.forEach((route) => {
-      //   router.addRoute('main', route)
-      // })
     },
     // 计算动态路由数据
     getsMenus(menus: any) {

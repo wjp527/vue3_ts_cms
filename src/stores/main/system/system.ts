@@ -77,7 +77,7 @@ const useSystem = defineStore('system', {
       const res = await reqPageListData(pageUrl, opt)
 
       const { list, totalCount } = res.data
-      console.log(list)
+
       // 3.将数据存储到state中
       // if (list.length > 0) {
       // 第一种方式

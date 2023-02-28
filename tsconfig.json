@@ -50,7 +50,8 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    "src/global/index.ts"
+    "src/global/index.ts",
+    "src/base-ui/cardTop/src/countup.js"
   ],
   // 排除文件
   "exclude": [

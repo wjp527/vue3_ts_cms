@@ -27,6 +27,7 @@ export function requestUserInfoById(id: number) {
 
 // 获取侧边栏全部数据
 export function reqUserMenuByRoleId(id: number) {
+  console.log(id)
   return pRequest.get<IDataType>({
     url: LoginAPI.UserMenus + id + '/menu',
     showLoading: false

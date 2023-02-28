@@ -66,8 +66,6 @@ export default defineComponent({
     // 点击确定按钮的逻辑
     const commonStore = useCommon()
     const handleConfirmClick = () => {
-      console.log(1)
-      console.log(formData)
       // dialogVisible.value = false
       if (Object.keys(props.defaultInfo).length) {
         // 编辑

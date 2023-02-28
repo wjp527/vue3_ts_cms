@@ -14,7 +14,7 @@
       :collapse="isCollapse"
       :collapse-transition="isCollapse"
     >
-      <template v-for="item in menu" :key="item.id">
+      <template v-for="item in menus" :key="item.id">
         <!-- 二级菜单 -->
         <template v-if="item.type === 1">
           <!-- 二级菜单的可以展开的标题 -->
@@ -53,7 +53,7 @@ import { defineComponent, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Setting } from '@element-plus/icons-vue'
 import useLogin from '@/stores/login/login'
-import { pathMapMenu } from '@/utils/map.menus'
+import { pathMapToMenu } from '@/utils/map.menus'
 export default defineComponent({
   name: 'NavMenu',
   props: {
@@ -64,24 +64,22 @@ export default defineComponent({
   setup(props, ctx) {
     // pinia
     const loginStore = useLogin()
-    const menu = loginStore.userMenus
-
+    const menus = loginStore.userMenus
     // router
     const router = useRouter()
-    const Route = useRoute()
-    // console.log(Route)
-    const routePath = Route.path
-    let current = pathMapMenu(menu, routePath)
-    let defaultValue = ref(current.id + '')
-
+    const route = useRoute()
+    const menu = pathMapToMenu(menus, route.path)
+    // let defaultValue = ref(current.id + '')
+    let defaultValue = ref<string>(menu.id + '')
     // 方法
     const handleMenuItemClick = (item: any) => {
+      defaultValue.value = item.id + ''
       router.push({
         path: item.url ?? '/notFound'
       })
     }
     return {
-      menu,
+      menus,
       handleMenuItemClick,
       defaultValue
     }
