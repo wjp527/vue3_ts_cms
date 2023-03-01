@@ -7,3 +7,4 @@ declare module '*.vue' {
 
 // 不对以下变量进行操作
 // declare let $store: any
+declare module '*.json'

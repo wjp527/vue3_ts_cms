@@ -1,4 +1,6 @@
 import * as echarts from 'echarts'
+import ChinaMapData from '../../data/data.json'
+echarts.registerMap('china', ChinaMapData)
 export default function (el: HTMLElement) {
   const echartInstance = echarts.init(el)
 
